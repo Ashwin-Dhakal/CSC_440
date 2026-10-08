@@ -16,6 +16,8 @@ Cart page (`http://127.0.0.1:8000/cart/`):
 
 Customers can add a product, change its quantity (1 through 20), and remove it. The cart belongs to the browser session. There is no checkout.
 
+These pictures are from a demo after two prices were edited in admin. A fresh `loaddata` uses the fixture prices in the table below: Chicken Wings 11.49 and Chocolate Milkshake 5.49.
+
 ## Requirements
 
 - Python 3.12 or newer
