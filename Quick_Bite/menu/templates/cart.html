@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        {% include 'nav.html' %}
+        <p class="brand">QuickBite</p>
+        <h1>Your Cart</h1>
+        <p><a class="cart-link" href="{% url 'menu_list' %}">Back to menu</a></p>
+    </header>
+    <main>
+        {% if lines %}
+        <ul class="menu-list">
+            {% for line in lines %}
+            <li>
+                <article class="menu-card">
+                    <img class="menu-card__image" src="{{ line.image_url }}" alt="{{ line.name }}">
+                    <div class="menu-card__body">
+                        <h2>{{ line.name }}</h2>
+                        <p class="menu-card__price">${{ line.price }}</p>
+                        <div class="cart-quantity" data-cart-quantity>
+                            <form method="post" action="{% url 'cart_decrease' line.product_id %}" data-qty-decrease-form>
+                                {% csrf_token %}
+                                <button type="submit" aria-label="Decrease quantity">−</button>
+                            </form>
+                            <form method="post" action="{% url 'cart_update' line.product_id %}" class="cart-quantity__update" data-qty-update-form>
+                                {% csrf_token %}
+                                <label class="cart-quantity__label" for="qty-{{ line.product_id }}">Qty</label>
+                                <input
+                                    id="qty-{{ line.product_id }}"
+                                    class="cart-quantity__input"
+                                    type="number"
+                                    name="quantity"
+                                    value="{{ line.quantity }}"
+                                    min="1"
+                                    max="20"
+                                    step="1"
+                                    inputmode="numeric"
+                                    data-qty-input
+                                >
+                                <button type="submit">Update</button>
+                            </form>
+                            <form method="post" action="{% url 'cart_increase' line.product_id %}" data-qty-increase-form>
+                                {% csrf_token %}
+                                <button type="submit" aria-label="Increase quantity">+</button>
+                            </form>
+                        </div>
+                        <p class="menu-card__price">Line total: ${{ line.line_total }}</p>
+                        <form method="post" action="{% url 'cart_remove' line.product_id %}">
+                            {% csrf_token %}
+                            <button type="submit">Remove</button>
+                        </form>
+                    </div>
+                </article>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="cart-empty">Your cart is empty.</p>
+        {% endif %}
+        <p class="menu-card__price cart-total">Total: ${{ total }}</p>
+    </main>
+    <script src="{% static 'js/cart.js' %}" defer></script>
+</body>
+</html>
